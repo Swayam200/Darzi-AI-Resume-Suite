@@ -19,6 +19,10 @@ yarn-error.log*
 # env files
 .env*
 
+# allowed example envs to be tracked
+!.env.example
+!**/.env.example
+
 # vercel
 .vercel
 
