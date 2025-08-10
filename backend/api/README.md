@@ -51,6 +51,43 @@ python main.py
 # Server will be available at http://localhost:7860
 ```
 
+### Testing the API
+
+#### Test Text Parsing:
+```bash
+curl -X POST http://localhost:7860/parse \
+  -H "Content-Type: text/plain" \
+  -d "John Doe. Email: john.doe@example.com. Phone: 1234567890. Python developer with 5 years experience at Google."
+```
+
+#### Test PDF Parsing:
+```bash
+# Replace 'path/to/your/resume.pdf' with your actual PDF file path
+curl -X POST http://localhost:7860/parse-pdf \
+  -F 'file=@path/to/your/resume.pdf'
+
+# Example paths:
+curl -X POST http://localhost:7860/parse-pdf -F 'file=@~/Downloads/resume.pdf'
+curl -X POST http://localhost:7860/parse-pdf -F 'file=@~/Desktop/my_resume.pdf'
+```
+
+#### Expected Response Format:
+```json
+{
+  "filename": "resume.pdf",
+  "parsing_result": {
+    "name": "John Doe",
+    "email": ["john.doe@example.com"],
+    "mobile_number": ["1234567890"],
+    "skills": ["Python", "JavaScript", "React"],
+    "education": ["Bachelor of Science", "University Name"],
+    "experience": [{"title": "Software Engineer", "company": "Google"}],
+    "raw_text": "First 500 characters of extracted text..."
+  },
+  "source": "local_parser"
+}
+```
+
 ### Docker Deployment
 
 1. Build the Docker image:
