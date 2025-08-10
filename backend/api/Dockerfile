@@ -10,6 +10,9 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY . .
 RUN uv pip install -e .
 
+# Install spaCy English model for resume parsing
+RUN python -m spacy download en_core_web_sm
+
 ENV PORT=7860
 EXPOSE $PORT
 
