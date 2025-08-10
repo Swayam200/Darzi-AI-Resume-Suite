@@ -1,0 +1,10 @@
+# Ignore all PDF files in this directory (for testing purposes)
+*.pdf
+*.doc
+*.docx
+
+# Keep this directory structure but not the actual resumes
+!.gitignore
+
+# This folder is for local testing only
+README.md
