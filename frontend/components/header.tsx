@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs'
 
 const menuItems = [
     { name: 'Features', href: '#features' },
@@ -15,6 +16,7 @@ const menuItems = [
 const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
+    const { user, isLoaded } = useUser();
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -75,33 +77,41 @@ const HeroHeader = () => {
                                     ))}
                                 </ul>
                             </div>
-                            {/* Keep existing buttons, just wire to Clerk routes */}
-                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="/sign-in">
-                                        <span>Login</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="/sign-up">
-                                        <span>Sign Up</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="/Dashboard">
-                                        <span>Get Started</span>
-                                    </Link>
-                                </Button>
+                            {/* Auth logic: show login/signup if signed out, user name & button if signed in */}
+                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit items-center">
+                                <SignedOut>
+                                    <Button
+                                        asChild
+                                        variant="outline"
+                                        size="sm"
+                                        className={cn(isScrolled && 'lg:hidden')}>
+                                        <Link href="/sign-in">
+                                            <span>Login</span>
+                                        </Link>
+                                    </Button>
+                                    <Button
+                                        asChild
+                                        size="sm"
+                                        className={cn(isScrolled && 'lg:hidden')}>
+                                        <Link href="/sign-up">
+                                            <span>Sign Up</span>
+                                        </Link>
+                                    </Button>
+                                </SignedOut>
+                                <SignedIn>
+                                    <span className="text-muted-foreground mr-2 hidden sm:inline-block">
+                                        {isLoaded ? user?.firstName || user?.username || 'User' : 'Loading...'}
+                                    </span>
+                                    <UserButton afterSignOutUrl="/" />
+                                    <Button
+                                        asChild
+                                        size="sm"
+                                        className={cn(isScrolled ? 'lg:inline-flex ml-2' : 'hidden ml-2')}>
+                                        <Link href="/Dashboard">
+                                            <span>Dashboard</span>
+                                        </Link>
+                                    </Button>
+                                </SignedIn>
                             </div>
                         </div>
                     </div>
